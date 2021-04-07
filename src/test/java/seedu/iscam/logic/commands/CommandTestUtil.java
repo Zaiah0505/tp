@@ -20,8 +20,10 @@ import seedu.iscam.logic.commands.exceptions.CommandException;
 import seedu.iscam.model.Model;
 import seedu.iscam.model.client.Client;
 import seedu.iscam.model.commons.NameContainsKeywordsPredicate;
+import seedu.iscam.model.meeting.Meeting;
 import seedu.iscam.model.util.clientbook.ClientBook;
 import seedu.iscam.testutil.EditClientDescriptorBuilder;
+import seedu.iscam.testutil.EditMeetingDescriptorBuilder;
 
 /**
  * Contains helper methods for testing commands.
@@ -41,6 +43,13 @@ public class CommandTestUtil {
     public static final String VALID_TAG_HUSBAND = "husband";
     public static final String VALID_TAG_FRIEND = "friend";
     public static final String VALID_IMAGE = "default.png";
+
+    // Additional constants for testing meeting
+    public static final String VALID_TAG_URGENT = "urgent";
+    public static final String VALID_MEETING_DESC = "Discuss PA Plan.";
+    // TODO: Might cause errors if the date here is before the current date of testing
+    public static final String VALID_DATETIME = "03-04-2052 10:00";
+    public static final String VALID_STATUS_INCOMPLETE = "incomplete";
 
     public static final String NAME_DESC_AMY = " " + PREFIX_NAME + VALID_NAME_AMY;
     public static final String NAME_DESC_BOB = " " + PREFIX_NAME + VALID_NAME_BOB;
@@ -69,6 +78,8 @@ public class CommandTestUtil {
 
     public static final EditCommand.EditClientDescriptor DESC_AMY;
     public static final EditCommand.EditClientDescriptor DESC_BOB;
+    public static final EditMeetingCommand.EditMeetingDescriptor DESC_AMY_MEETING;
+    public static final EditMeetingCommand.EditMeetingDescriptor DESC_BOB_MEETING;
 
     static {
         DESC_AMY = new EditClientDescriptorBuilder().withName(VALID_NAME_AMY)
@@ -77,6 +88,14 @@ public class CommandTestUtil {
         DESC_BOB = new EditClientDescriptorBuilder().withName(VALID_NAME_BOB)
                 .withPhone(VALID_PHONE_BOB).withEmail(VALID_EMAIL_BOB).withLocation(VALID_LOCATION_BOB)
                 .withPlan(VALID_PLAN_BOB).withTags(VALID_TAG_HUSBAND, VALID_TAG_FRIEND).build();
+        DESC_AMY_MEETING = new EditMeetingDescriptorBuilder().withName(VALID_NAME_AMY)
+                .withDescription(VALID_MEETING_DESC).withDateTime(VALID_DATETIME)
+                .withLocation(VALID_LOCATION_AMY).withTags(VALID_TAG_URGENT).withStatus(VALID_STATUS_INCOMPLETE)
+                .build();
+        DESC_BOB_MEETING = new EditMeetingDescriptorBuilder().withName(VALID_NAME_BOB)
+                .withDescription(VALID_MEETING_DESC).withDateTime(VALID_DATETIME)
+                .withLocation(VALID_LOCATION_BOB).withTags(VALID_TAG_URGENT).withStatus(VALID_STATUS_INCOMPLETE)
+                .build();
     }
 
     /**
@@ -121,6 +140,7 @@ public class CommandTestUtil {
         assertEquals(expectedClientBook, actualModel.getClientBook());
         assertEquals(expectedFilteredList, actualModel.getFilteredClientList());
     }
+
     /**
      * Updates {@code model}'s filtered list to show only the client at the given {@code targetIndex} in the
      * {@code model}'s iscam book.
@@ -133,6 +153,19 @@ public class CommandTestUtil {
         model.updateFilteredClientList(new NameContainsKeywordsPredicate(Arrays.asList(splitName[0])));
 
         assertEquals(1, model.getFilteredClientList().size());
+    }
+
+    /**
+     * Updates {@code model}'s filtered list to show only the meeting at the given {@code targetIndex} in the
+     * {@code model}'s iscam book.
+     */
+    public static void showMeetingAtIndex(Model model, Index targetIndex) {
+        assertTrue(targetIndex.getZeroBased() < model.getFilteredMeetingList().size());
+
+        Meeting meeting = model.getFilteredMeetingList().get(targetIndex.getZeroBased());
+        model.updateFilteredMeetingList(meeting::equals);
+
+        assertEquals(1, model.getFilteredMeetingList().size());
     }
 
 }

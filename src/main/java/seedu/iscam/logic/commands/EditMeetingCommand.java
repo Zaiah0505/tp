@@ -10,6 +10,7 @@ import static seedu.iscam.logic.parser.CliSyntax.PREFIX_TAG;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -118,6 +119,24 @@ public class EditMeetingCommand extends Command {
         model.setMeeting(meeting, editedMeeting);
         model.updateFilteredMeetingList(Model.PREDICATE_SHOW_ALL_MEETINGS);
         return new CommandResult(String.format(MESSAGE_EDIT_MEETING_SUCCESS, editedMeeting));
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        // short circuit if same object
+        if (other == this) {
+            return true;
+        }
+
+        // instanceof handles nulls
+        if (!(other instanceof EditMeetingCommand)) {
+            return false;
+        }
+
+        // state check
+        EditMeetingCommand e = (EditMeetingCommand) other;
+        return index.equals(e.index)
+                && editMeetingDescriptor.equals(e.editMeetingDescriptor);
     }
 
     /**
