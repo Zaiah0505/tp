@@ -79,7 +79,7 @@ public class EditMeetingCommand extends Command {
 
         Name updatedClientName = editMeetingDescriptor.getClientName().orElse(meetingToEdit.getClientName());
         DateTime updatedDateTime = editMeetingDescriptor.getDateTime().orElse(meetingToEdit.getDateTime());
-        Location updatedLocation = editMeetingDescriptor.getLocation().orElse(meetingToEdit.getLocation());
+        Location updatedLocation = editMeetingDescriptor.setLocation().orElse(meetingToEdit.getLocation());
         Description updatedDescription = editMeetingDescriptor.getDescription().orElse(meetingToEdit.getDescription());
         Set<Tag> updatedTags = editMeetingDescriptor.getTags().orElse(meetingToEdit.getTags());
         CompletionStatus updatedStatus = editMeetingDescriptor.getStatus().orElse(meetingToEdit.getStatus());
@@ -141,7 +141,7 @@ public class EditMeetingCommand extends Command {
         public EditMeetingDescriptor(EditMeetingDescriptor toCopy) {
             setClientName(toCopy.clientName);
             setDateTime(toCopy.dateTime);
-            getLocation(toCopy.location);
+            setLocation(toCopy.location);
             setDescription(toCopy.description);
             setTags(toCopy.tags);
             setStatus(toCopy.status);
@@ -170,11 +170,11 @@ public class EditMeetingCommand extends Command {
             this.dateTime = dateTime;
         }
 
-        public Optional<Location> getLocation() {
+        public Optional<Location> setLocation() {
             return Optional.ofNullable(location);
         }
 
-        public void getLocation(Location location) {
+        public void setLocation(Location location) {
             this.location = location;
         }
 
@@ -216,7 +216,7 @@ public class EditMeetingCommand extends Command {
 
             return getClientName().equals(e.getClientName())
                     && getDateTime().equals(e.getDateTime())
-                    && getLocation().equals(e.getLocation())
+                    && setLocation().equals(e.setLocation())
                     && getDescription().equals(e.getDescription())
                     && getTags().equals(e.getTags())
                     && getStatus().equals(e.getStatus());
