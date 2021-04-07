@@ -2,6 +2,8 @@ package seedu.iscam.logic.commands;
 
 import static java.util.Objects.requireNonNull;
 
+import java.util.Objects;
+
 import javafx.collections.ObservableList;
 import seedu.iscam.commons.core.Messages;
 import seedu.iscam.commons.core.index.Index;
@@ -24,13 +26,13 @@ public class DoneMeetingCommand extends Command {
     public static final String MESSAGE_SUCCESS = "Completed meeting: %1$s";
     public static final String MESSAGE_ALREADY_COMPLETE = "The specified meeting has already been completed.";
 
-    private final Index index;
+    private final Index targetIndex;
 
     /**
      * Completes a meeting specified by an index.
      */
     public DoneMeetingCommand(Index targetIndex) {
-        this.index = targetIndex;
+        this.targetIndex = targetIndex;
     }
 
     /**
@@ -45,11 +47,11 @@ public class DoneMeetingCommand extends Command {
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
         ObservableList<Meeting> meetings = model.getFilteredMeetingList();
-        if (index.getZeroBased() >= meetings.size()) {
+        if (targetIndex.getZeroBased() >= meetings.size()) {
             throw new CommandException(Messages.MESSAGE_INVALID_MEETING_DISPLAYED_INDEX);
         }
 
-        Meeting meeting = meetings.get(index.getZeroBased());
+        Meeting meeting = meetings.get(targetIndex.getZeroBased());
         Meeting completedMeeting = completeMeeting(meeting);
         if (meeting.equals(completedMeeting)) {
             throw new CommandException(MESSAGE_ALREADY_COMPLETE);
@@ -58,5 +60,13 @@ public class DoneMeetingCommand extends Command {
         model.setMeeting(meeting, completedMeeting);
         model.updateFilteredMeetingList(Model.PREDICATE_SHOW_ALL_MEETINGS);
         return new CommandResult(String.format(MESSAGE_SUCCESS, completedMeeting));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DoneMeetingCommand that = (DoneMeetingCommand) o;
+        return Objects.equals(targetIndex, that.targetIndex);
     }
 }
